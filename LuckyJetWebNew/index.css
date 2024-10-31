@@ -281,6 +281,7 @@ img {
     margin: 120px auto 0 auto;
     transition: all 0.32s ease 0s;
     z-index: 5;
+    pointer-events: none;
 }
 
 
