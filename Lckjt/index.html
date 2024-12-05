@@ -119,7 +119,6 @@
     </div>
 
 
-
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         let count = 3; // Начальное количество ловушек
@@ -199,7 +198,7 @@
             openStar(); // Запускаем процесс поочередного открытия
         }
 
-        // Открытие одной звезды без задержки
+        // Открытие одной звезды с задержкой
         function openStar() {
             if (starsToOpen.length === 0) {
                 endGame(); // Если звезды закончились, завершаем игру
@@ -208,13 +207,21 @@
 
             const index = starsToOpen.shift(); // Берем первый элемент из массива
             const square = squares[index];
-            soundEffect.play(); // Проигрываем звук немедленно
-            square.classList.add('chosenOne'); // Добавляем класс для выделенной ячейки
-            square.innerHTML = '<div style="width: 100%; height: 100%; background: url(\'star.svg\') center/contain no-repeat;"></div>'; // Добавляем изображение звезды
+
+            // Проигрываем звук немного раньше, чем открываем звезду
+            setTimeout(() => {
+                soundEffect.play(); // Проигрываем звук на 950 миллисекунд
+            }, 950);
+
+            // Открытие звезды через 1000 миллисекунд
+            setTimeout(() => {
+                square.classList.add('chosenOne'); // Добавляем класс для выделенной ячейки
+                square.innerHTML = '<div style="width: 100%; height: 100%; background: url(\'star.svg\') center/contain no-repeat;"></div>'; // Добавляем изображение звезды
+            }, 1000);
 
             // Задержка перед открытием следующей звезды
             if (starsToOpen.length > 0) {
-                setTimeout(openStar, 500); // Задержка 500мс перед открытием следующей звезды
+                setTimeout(openStar, 1000); // Задержка 1000мс перед открытием следующей звезды
             }
         }
 
@@ -256,6 +263,7 @@
         updateCountDisplay();
     });
 </script>
+
 
 
 
