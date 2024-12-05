@@ -120,7 +120,6 @@
 
 
 
-
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         let count = 3; // Начальное количество ловушек
@@ -200,7 +199,7 @@
             openStar(); // Запускаем процесс поочередного открытия
         }
 
-        // Открытие одной звезды с задержкой
+        // Открытие одной звезды без задержки
         function openStar() {
             if (starsToOpen.length === 0) {
                 endGame(); // Если звезды закончились, завершаем игру
@@ -214,7 +213,9 @@
             square.innerHTML = '<div style="width: 100%; height: 100%; background: url(\'star.svg\') center/contain no-repeat;"></div>'; // Добавляем изображение звезды
 
             // Задержка перед открытием следующей звезды
-            intervalId = setTimeout(openStar, 500); // Задержка 500мс перед открытием следующей звезды
+            if (starsToOpen.length > 0) {
+                setTimeout(openStar, 500); // Задержка 500мс перед открытием следующей звезды
+            }
         }
 
         // Завершение игры и возвращение клеток в исходное состояние
@@ -255,6 +256,7 @@
         updateCountDisplay();
     });
 </script>
+
 
 
 
