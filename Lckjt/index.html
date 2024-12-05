@@ -118,7 +118,6 @@
         </div>
     </div>
 
-
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         let count = 3; // Начальное количество ловушек
@@ -185,92 +184,42 @@
 
             resetGame(); // Очищаем старые ячейки
 
-            // Этап 2: Открываем новые звезды
-            const cellsToOpen = squaresToOpen(); // Получаем количество ячеек для открытия
-            const indices = new Set();
+            // Составляем массив индексов для открытия ячеек
+            starsToOpen = [];
+            const totalStars = squaresToOpen();
+            const availableSquares = Array.from(squares.keys());
 
-            // Выбираем случайные ячейки
-            while (indices.size < cellsToOpen) {
-                indices.add(Math.floor(Math.random() * squares.length));
+            // Перемешиваем индексы и берем нужное количество
+            for (let i = 0; i < totalStars; i++) {
+                const randomIndex = availableSquares.splice(Math.floor(Math.random() * availableSquares.length), 1)[0];
+                starsToOpen.push(randomIndex);
             }
 
-            starsToOpen = Array.from(indices); // Массив индексов ячеек для открытия
-            openStar(); // Запускаем процесс поочередного открытия
+            // Открытие ячеек с проигрыванием звука
+            starsToOpen.forEach((index, i) => {
+                setTimeout(() => {
+                    squares[index].classList.add('chosenOne'); // Добавляем класс для отображения звезды
+                    squares[index].innerHTML = '⭐'; // Вставляем саму звезду
+
+                    // Проигрывание звука для каждой звезды
+                    const sound = new Audio('1.mp3');
+                    sound.play();
+                }, i * 1000); // Интервал открытия ячеек по 1000мс
+            });
+
+            // Завершаем игру через 1.5 секунды после открытия всех звёзд
+            gameTimeout = setTimeout(() => {
+                gameInProgress = false;
+            }, totalStars * 1000 + 1500);
         }
 
-        // Открытие одной звезды с задержкой
-        function openStar() {
-            if (starsToOpen.length === 0) {
-                endGame(); // Если звезды закончились, завершаем игру
-                return;
-            }
-
-            const index = starsToOpen.shift(); // Берем первый элемент из массива
-            const square = squares[index];
-
-            // Проигрываем звук немного раньше, чем открываем звезду
-            setTimeout(() => {
-                soundEffect.play(); // Проигрываем звук на 950 миллисекунд
-            }, 950);
-
-            // Открытие звезды через 1000 миллисекунд
-            setTimeout(() => {
-                square.classList.add('chosenOne'); // Добавляем класс для выделенной ячейки
-                square.innerHTML = '<div style="width: 100%; height: 100%; background: url(\'star.svg\') center/contain no-repeat;"></div>'; // Добавляем изображение звезды
-            }, 1000);
-
-            // Задержка перед открытием следующей звезды
-            if (starsToOpen.length > 0) {
-                setTimeout(openStar, 1000); // Задержка 1000мс перед открытием следующей звезды
-            }
-        }
-
-        // Завершение игры и возвращение клеток в исходное состояние
-        function endGame() {
-            gameInProgress = false; // Игра завершена
-
-            // Разблокируем кнопки и стрелки
-            playButton.disabled = false;
-            prevArrow.disabled = false;
-            nextArrow.disabled = false;
-
-            // Очищаем таймеры
-            clearTimeout(gameTimeout);
-            clearTimeout(intervalId);
-        }
-
-        // Обработка кнопки "предыдущая ловушка"
+        // Обработчики для кнопок
+        playButton.addEventListener('click', startGame);
         prevArrow.addEventListener('click', decrement);
-
-        // Обработка кнопки "следующая ловушка"
         nextArrow.addEventListener('click', increment);
-
-        // Обработка кнопки "Играть"
-        playButton.addEventListener('click', () => {
-            if (gameInProgress) {
-                clearTimeout(gameTimeout); // Прерываем текущую игру, если она идет
-                clearTimeout(intervalId); // Прерываем открытие ячеек
-                resetGame(); // Очищаем ячейки
-                endGame(); // Завершаем текущую игру
-            }
-            playButton.disabled = true; // Блокируем кнопку "Играть" во время игры
-            prevArrow.disabled = true; // Блокируем стрелки
-            nextArrow.disabled = true; // Блокируем стрелки
-            startGame(); // Запуск новой игры
-        });
-
-        // Инициализация начального отображения количества ловушек
-        updateCountDisplay();
     });
 </script>
 
 
-
-
-
-
-
-    
-        
 </body>
 </html>
