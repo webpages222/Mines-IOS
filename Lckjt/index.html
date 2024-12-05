@@ -121,132 +121,136 @@
 
 
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            let count = 3; // Начальное количество ловушек
-            const countElement = document.querySelector('.game-try-left__traps_count'); // Элемент для отображения количества ловушек
-            const soundEffect = new Audio('1.mp3'); // Звуковой эффект
-            const squares = document.querySelectorAll('.game-item'); // Все клетки игры
-            const playButton = document.getElementById('playButtonHowModal'); // Кнопка для начала игры
-            const prevArrow = document.querySelector('.game-try-left__prev-arrow-btn'); // Стрелка для уменьшения ловушек
-            const nextArrow = document.querySelector('.game-try-left__next-arrow-btn'); // Стрелка для увеличения ловушек
-            let gameInProgress = false; // Флаг, чтобы отслеживать, идет ли игра
-            let gameTimeout; // Таймер для завершения игры
-            let intervalId; // Таймер для открытия ячеек
-    
-            // Обновление отображаемого количества ловушек
-            function updateCountDisplay() {
-                countElement.textContent = count;
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        let count = 3; // Начальное количество ловушек
+        const countElement = document.querySelector('.game-try-left__traps_count'); // Элемент для отображения количества ловушек
+        const soundEffect = new Audio('1.mp3'); // Звуковой эффект
+        const squares = document.querySelectorAll('.game-item'); // Все клетки игры
+        const playButton = document.getElementById('playButtonHowModal'); // Кнопка для начала игры
+        const prevArrow = document.querySelector('.game-try-left__prev-arrow-btn'); // Стрелка для уменьшения ловушек
+        const nextArrow = document.querySelector('.game-try-left__next-arrow-btn'); // Стрелка для увеличения ловушек
+        let gameInProgress = false; // Флаг, чтобы отслеживать, идет ли игра
+        let gameTimeout; // Таймер для завершения игры
+        let intervalId; // Таймер для открытия ячеек
+
+        // Обновление отображаемого количества ловушек
+        function updateCountDisplay() {
+            countElement.textContent = count;
+        }
+
+        // Увеличение количества ловушек
+        function increment() {
+            const validTraps = [1, 3, 5, 7]; // Допустимые значения ловушек
+            let currentIndex = validTraps.indexOf(count);
+            if (currentIndex < validTraps.length - 1) {
+                count = validTraps[currentIndex + 1];
+                updateCountDisplay();
             }
-    
-            // Увеличение количества ловушек
-            function increment() {
-                const validTraps = [1, 3, 5, 7]; // Допустимые значения ловушек
-                let currentIndex = validTraps.indexOf(count);
-                if (currentIndex < validTraps.length - 1) {
-                    count = validTraps[currentIndex + 1];
-                    updateCountDisplay();
-                }
+        }
+
+        // Уменьшение количества ловушек
+        function decrement() {
+            const validTraps = [1, 3, 5, 7]; // Допустимые значения ловушек
+            let currentIndex = validTraps.indexOf(count);
+            if (currentIndex > 0) {
+                count = validTraps[currentIndex - 1];
+                updateCountDisplay();
             }
-    
-            // Уменьшение количества ловушек
-            function decrement() {
-                const validTraps = [1, 3, 5, 7]; // Допустимые значения ловушек
-                let currentIndex = validTraps.indexOf(count);
-                if (currentIndex > 0) {
-                    count = validTraps[currentIndex - 1];
-                    updateCountDisplay();
-                }
+        }
+
+        // Количество ячеек для открытия в зависимости от количества ловушек
+        function squaresToOpen() {
+            switch (count) {
+                case 1: return 10;
+                case 3: return 7;
+                case 5: return 5;
+                case 7: return 4; // Для 7 ловушек открываем 4 ячейки
+                default: return 3;
             }
-    
-            // Количество ячеек для открытия в зависимости от количества ловушек
-            function squaresToOpen() {
-                switch (count) {
-                    case 1: return 10;
-                    case 3: return 7;
-                    case 5: return 5;
-                    case 7: return 4; // Для 7 ловушек открываем 4 ячейки
-                    default: return 3;
-                }
-            }
-    
-            // Очищаем все ячейки
-            function resetGame() {
-                squares.forEach(square => {
-                    square.classList.remove('chosenOne'); // Убираем класс звезды
-                    square.innerHTML = ''; // Убираем содержимое ячейки
-                });
-            }
-    
-            // Старт игры, открытие случайных ячеек
-            function startGame() {
-                if (gameInProgress) return; // Если игра уже идет, не начинаем заново
-                gameInProgress = true; // Игра началась
-    
-                resetGame(); // Очищаем старые ячейки
-    
-                // Этап 2: Открываем новые звезды
-                const cellsToOpen = squaresToOpen(); // Получаем количество ячеек для открытия
-                const indices = new Set();
-    
-                // Выбираем случайные ячейки
-                while (indices.size < cellsToOpen) {
-                    indices.add(Math.floor(Math.random() * squares.length));
-                }
-    
-                let delay = 0;
-                indices.forEach(index => {
-                    intervalId = setTimeout(() => {
-                        soundEffect.play(); // Проигрываем звук
-                        const square = squares[index];
-                        square.classList.add('chosenOne'); // Добавляем класс для выделенной ячейки
-                        square.innerHTML = '<div style="width: 100%; height: 100%; background: url(\'star.svg\') center/contain no-repeat;"></div>'; // Добавляем изображение звезды
-                    }, delay);
-                    delay += 1000; // Задержка 1 секунда между открытием ячеек
-                });
-    
-                // Завершаем игру после открытия всех ячеек
-                gameTimeout = setTimeout(endGame, delay + 1000); // Время для завершения игры
-            }
-    
-            // Завершение игры и возвращение клеток в исходное состояние
-            function endGame() {
-                gameInProgress = false; // Игра завершена
-    
-                // Разблокируем кнопки и стрелки
-                playButton.disabled = false;
-                prevArrow.disabled = false;
-                nextArrow.disabled = false;
-    
-                // Очищаем таймеры
-                clearTimeout(gameTimeout);
-                clearTimeout(intervalId);
-            }
-    
-            // Обработка кнопки "предыдущая ловушка"
-            prevArrow.addEventListener('click', decrement);
-    
-            // Обработка кнопки "следующая ловушка"
-            nextArrow.addEventListener('click', increment);
-    
-            // Обработка кнопки "Играть"
-            playButton.addEventListener('click', () => {
-                if (gameInProgress) {
-                    clearTimeout(gameTimeout); // Прерываем текущую игру, если она идет
-                    clearTimeout(intervalId); // Прерываем открытие ячеек
-                    resetGame(); // Очищаем ячейки
-                    endGame(); // Завершаем текущую игру
-                }
-                playButton.disabled = true; // Блокируем кнопку "Играть" во время игры
-                prevArrow.disabled = true; // Блокируем стрелки
-                nextArrow.disabled = true; // Блокируем стрелки
-                startGame(); // Запуск новой игры
+        }
+
+        // Очищаем все ячейки
+        function resetGame() {
+            squares.forEach(square => {
+                square.classList.remove('chosenOne'); // Убираем класс звезды
+                square.innerHTML = ''; // Убираем содержимое ячейки
             });
-    
-            // Инициализация начального отображения количества ловушек
-            updateCountDisplay();
+        }
+
+        // Старт игры, открытие случайных ячеек
+        function startGame() {
+            if (gameInProgress) return; // Если игра уже идет, не начинаем заново
+            gameInProgress = true; // Игра началась
+
+            resetGame(); // Очищаем старые ячейки
+
+            // Этап 2: Открываем новые звезды
+            const cellsToOpen = squaresToOpen(); // Получаем количество ячеек для открытия
+            const indices = new Set();
+
+            // Выбираем случайные ячейки
+            while (indices.size < cellsToOpen) {
+                indices.add(Math.floor(Math.random() * squares.length));
+            }
+
+            // Звуки проигрываются до того, как звезды открываются
+            let soundDelay = 0;
+            indices.forEach(index => {
+                setTimeout(() => {
+                    const square = squares[index];
+                    soundEffect.cloneNode(true).play(); // Проигрываем звук при открытии каждой клетки
+                    square.classList.add('chosenOne'); // Добавляем класс для выделенной ячейки
+                    square.innerHTML = '<div style="width: 100%; height: 100%; background: url(\'star.svg\') center/contain no-repeat;"></div>'; // Добавляем изображение звезды
+                }, soundDelay);
+                soundDelay += 500; // Задержка для проигрывания каждого звука
+            });
+
+            // Завершаем игру после открытия всех ячеек
+            gameTimeout = setTimeout(endGame, soundDelay + 500); // Время для завершения игры
+        }
+
+        // Завершение игры и возвращение клеток в исходное состояние
+        function endGame() {
+            gameInProgress = false; // Игра завершена
+
+            // Разблокируем кнопки и стрелки
+            playButton.disabled = false;
+            prevArrow.disabled = false;
+            nextArrow.disabled = false;
+
+            // Очищаем таймеры
+            clearTimeout(gameTimeout);
+            clearTimeout(intervalId);
+        }
+
+        // Обработка кнопки "предыдущая ловушка"
+        prevArrow.addEventListener('click', decrement);
+
+        // Обработка кнопки "следующая ловушка"
+        nextArrow.addEventListener('click', increment);
+
+        // Обработка кнопки "Играть"
+        playButton.addEventListener('click', () => {
+            if (gameInProgress) {
+                clearTimeout(gameTimeout); // Прерываем текущую игру, если она идет
+                clearTimeout(intervalId); // Прерываем открытие ячеек
+                resetGame(); // Очищаем ячейки
+                endGame(); // Завершаем текущую игру
+            }
+            playButton.disabled = true; // Блокируем кнопку "Играть" во время игры
+            prevArrow.disabled = true; // Блокируем стрелки
+            nextArrow.disabled = true; // Блокируем стрелки
+            startGame(); // Запуск новой игры
         });
-    </script>
+
+        // Инициализация начального отображения количества ловушек
+        updateCountDisplay();
+    });
+</script>
+
+
     
         
 </body>
