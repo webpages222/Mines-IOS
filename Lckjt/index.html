@@ -195,20 +195,16 @@
                 indices.add(Math.floor(Math.random() * squares.length));
             }
 
-            // Звуки проигрываются до того, как звезды открываются
-            let soundDelay = 0;
+            // Звуки проигрываются одновременно с открытием каждой звезды
             indices.forEach(index => {
-                setTimeout(() => {
-                    const square = squares[index];
-                    soundEffect.cloneNode(true).play(); // Проигрываем звук при открытии каждой клетки
-                    square.classList.add('chosenOne'); // Добавляем класс для выделенной ячейки
-                    square.innerHTML = '<div style="width: 100%; height: 100%; background: url(\'star.svg\') center/contain no-repeat;"></div>'; // Добавляем изображение звезды
-                }, soundDelay);
-                soundDelay += 450; // Задержка для проигрывания каждого звука
+                const square = squares[index];
+                soundEffect.play(); // Проигрываем звук немедленно
+                square.classList.add('chosenOne'); // Добавляем класс для выделенной ячейки
+                square.innerHTML = '<div style="width: 100%; height: 100%; background: url(\'star.svg\') center/contain no-repeat;"></div>'; // Добавляем изображение звезды
             });
 
             // Завершаем игру после открытия всех ячеек
-            gameTimeout = setTimeout(endGame, soundDelay + 500); // Время для завершения игры
+            gameTimeout = setTimeout(endGame, 1000); // Время для завершения игры
         }
 
         // Завершение игры и возвращение клеток в исходное состояние
@@ -249,6 +245,7 @@
         updateCountDisplay();
     });
 </script>
+
 
 
     
