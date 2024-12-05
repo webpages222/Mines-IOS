@@ -134,6 +134,7 @@
         let gameInProgress = false; // Флаг, чтобы отслеживать, идет ли игра
         let gameTimeout; // Таймер для завершения игры
         let intervalId; // Таймер для открытия ячеек
+        let starsToOpen = []; // Массив для хранения индексов ячеек, которые нужно открыть
 
         // Обновление отображаемого количества ловушек
         function updateCountDisplay() {
@@ -177,9 +178,10 @@
                 square.classList.remove('chosenOne'); // Убираем класс звезды
                 square.innerHTML = ''; // Убираем содержимое ячейки
             });
+            starsToOpen = []; // Очищаем массив
         }
 
-        // Старт игры, открытие случайных ячеек
+        // Старт игры, открытие случайных ячеек поочередно
         function startGame() {
             if (gameInProgress) return; // Если игра уже идет, не начинаем заново
             gameInProgress = true; // Игра началась
@@ -195,16 +197,25 @@
                 indices.add(Math.floor(Math.random() * squares.length));
             }
 
-            // Звуки проигрываются одновременно с открытием каждой звезды
-            indices.forEach(index => {
-                const square = squares[index];
-                soundEffect.play(); // Проигрываем звук немедленно
-                square.classList.add('chosenOne'); // Добавляем класс для выделенной ячейки
-                square.innerHTML = '<div style="width: 100%; height: 100%; background: url(\'star.svg\') center/contain no-repeat;"></div>'; // Добавляем изображение звезды
-            });
+            starsToOpen = Array.from(indices); // Массив индексов ячеек для открытия
+            openStar(); // Запускаем процесс поочередного открытия
+        }
 
-            // Завершаем игру после открытия всех ячеек
-            gameTimeout = setTimeout(endGame, 1000); // Время для завершения игры
+        // Открытие одной звезды с задержкой
+        function openStar() {
+            if (starsToOpen.length === 0) {
+                endGame(); // Если звезды закончились, завершаем игру
+                return;
+            }
+
+            const index = starsToOpen.shift(); // Берем первый элемент из массива
+            const square = squares[index];
+            soundEffect.play(); // Проигрываем звук немедленно
+            square.classList.add('chosenOne'); // Добавляем класс для выделенной ячейки
+            square.innerHTML = '<div style="width: 100%; height: 100%; background: url(\'star.svg\') center/contain no-repeat;"></div>'; // Добавляем изображение звезды
+
+            // Задержка перед открытием следующей звезды
+            intervalId = setTimeout(openStar, 500); // Задержка 500мс перед открытием следующей звезды
         }
 
         // Завершение игры и возвращение клеток в исходное состояние
@@ -245,6 +256,7 @@
         updateCountDisplay();
     });
 </script>
+
 
 
 
