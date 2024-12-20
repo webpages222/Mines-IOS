@@ -1,0 +1,414 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Интерактивная страница</title>
+     <style>
+        @font-face {
+            font-family: 'Intro';
+            src: url('static/intro.otf') format('opentype');
+        }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* Высота 100% видимой области экрана */
+            margin: 0;
+            overflow: hidden; /* Предотвращаем прокрутку */
+            background-color: #090e1d; /* Путь к изображению */
+            background-size: cover; /* Масштабирует изображение так, чтобы оно полностью покрывало экран */
+            background-position: center; /* Центрируем изображение */
+            background-repeat: no-repeat; /* Запрещаем повторение изображения */
+        }
+
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        @keyframes glow {
+            0% { box-shadow: 0 7.5px 15px rgba(0,0,0,0.125), 0 0 20px 10px #ffa500; }
+            25% { box-shadow: 0 7.5px 15px rgba(0,0,0,0.125), 0 0 20px 10px #ff5050; }
+            50% { box-shadow: 0 7.5px 15px rgba(0,0,0,0.125), 0 0 20px 10px #50ff50; }
+            75% { box-shadow: 0 7.5px 15px rgba(0,0,0,0.125), 0 0 20px 10px #5050ff; }
+            100% { box-shadow: 0 7.5px 15px rgba(0,0,0,0.125), 0 0 20px 10px #ffa500; }
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #0a101e;
+            border-radius: 30px;
+            padding: 20px;
+            animation: glow 8s infinite linear;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(5, 112.5px);
+            grid-template-rows: repeat(5, 112.5px);
+            gap: 17.5px;
+        }
+
+        .square {
+            background-color: #238fa9;
+            border-radius: 10px;
+            transition: transform 0.3s ease-in-out, background-color 0.5s ease;
+        }
+
+        .square.open {
+            transform: scale(1.1); /* Увеличение при открытии */
+            transition: transform 0.3s ease-out;
+        }
+
+        button {
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            font-size: 45px;
+            padding: 40px 60px;
+            border-radius: 62.5px;
+        }
+
+        button:hover, button:focus {
+            transform: translateY(-5px);
+            transition: transform 0.2s ease-out, background-color 0.3s ease;
+        }
+
+        button:active {
+            transform: translateY(2.5px);
+            transition: transform 0.2s ease-out;
+        }
+        #trap-count-label {
+            margin-top: 50px;
+            font-size: 70px;
+            color: white;
+        }
+
+        #counter-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 10px 0;
+        }
+
+        .count-display {
+            width: 87.5px;
+            text-align: center;
+            font-size: 87.5px;
+            color: white;
+            margin: 0 30px;
+        }
+
+        .icon {
+            cursor: pointer;
+            width: 125px;
+            height: 125px;
+        }
+        .star {
+            opacity: 0;
+            transition: opacity 1s ease-in-out, transform 1s ease-in-out;
+            transform: scale(0);
+        }
+
+        .star.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+       #modal {
+            display: flex;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 650px; /* Подогнано под размеры слайдера */
+            height: 900px; /* Подогнано под размеры слайдера */
+            background: white;
+            padding: 50px;
+            border-radius: 125px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.25);
+            visibility: hidden; /* Скрыто по умолчанию */
+            opacity: 0; /* Начальная прозрачность */
+            transition: opacity 0.5s, visibility 0.5s; /* Плавная транзиция для opacity и visibility */
+        }
+
+        #modal.show {
+            visibility: visible;
+            opacity: 1;
+        }
+        .close-button {
+            position: absolute;
+            top: 30px;
+            right: 55px;
+            font-size: 85px;
+            color: black;
+            cursor: pointer;
+        }
+
+        button {
+            font-family: 'Intro';
+            margin-top: 50px;
+            padding: 40px 60px;
+            font-size: 45px;
+            text-transform: uppercase;
+            color: white;
+            background-image: linear-gradient(to right, #6e48aa, #9d50bb);
+            border: none;
+            border-radius: 62.5px;
+            cursor: pointer;
+            outline: none;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s ease;
+
+            /* Анимация дыхания */
+            animation: pulse 2s infinite;
+        }
+
+        button:hover {
+            background-image: linear-gradient(to right, #9d50bb, #6e48aa);
+            box-shadow: 0 12.5px 37.5px rgba(0, 0, 0, 0.75);
+        }
+
+        button:active {
+            box-shadow: 0 5px 12.5px rgba(0, 0, 0, 0.25);
+            transform: scale(0.98);
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 12.5px 37.5px rgba(0, 0, 0, 0.75);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            }
+        }
+
+        .animated-text {
+            font-size: 60px;
+            color: white;
+            font-family: 'Intro';
+            text-align: center;
+            margin-bottom: 50px;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+
+        .animated-text.show {
+            opacity: 1;
+        }
+
+        .vineet {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Intro';
+            font-size: 70px;
+            font-weight: bold;
+            color: white;
+            text-align: center;
+            margin-top: -100px;
+            margin-bottom: 50px;
+            transition: opacity 2s ease-in-out;
+        }
+
+        .vineet img {
+            width: 100px;
+            height: 125px;
+            margin-right: 25px;
+        }
+
+
+        #video-background {
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: -100;
+            background-size: cover;
+        }
+
+        .header {
+            position: absolute;
+            rotate: 180deg;
+            top: -10vh;
+        }
+
+        .img-footer {
+            align-content: center;
+            height: 20vh;
+            width: 100vw;
+        }
+
+        .footer {
+            position: absolute;
+            bottom: -10vh;
+        }
+
+
+
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img class="img-footer" src="static/footer.webp" alt="footer">
+      </div>
+    <div class="main-container">
+        <div class="vineet" id="vineet">
+            <img src="static/tg.svg" alt="Telegram Icon">
+            vineet_mines_bot
+        </div>
+        
+        <div class="container">
+            <div class="grid" id="grid">
+                <!-- Квадраты будут добавлены здесь с помощью JavaScript -->
+            </div>
+        </div>
+        
+        <div id="counter-container">
+            <span id="count" class="count-display"></span>
+        </div>
+        <button onclick="showModal()">Get signal</button>
+    </div>
+    <audio id="sound-effect" src="static/star.mp3"></audio>
+    <audio id="ok-sound" src="static/ok.mp3"></audio><!-- Звуковой эффект для воспроизведения -->
+    <audio id="close-sound" src="static/close.mp3"></audio>
+    <!-- Модальное окно для ввода количества ловушек -->
+    <div id="modal">
+    <div class="close-button" onclick="closeModals()">&times;</div>
+    <iframe src="static/slider.html" frameborder="0" style="width:100%; height:100%"></iframe>
+    </div>
+
+    <div class="footer">
+        <img class="img-footer" src="static/footer.webp" alt="footer">
+      </div>
+    <script src="iframe_api"></script>
+<script>
+    // Прослушивание сообщений от внедренного iframe или других источников
+    window.addEventListener('message', function(event) {
+        const receivedNumber = event.data;
+        if (receivedNumber && !isNaN(receivedNumber)) {
+            count = parseInt(receivedNumber, 10);
+            closeModal(); // Используем функцию для плавного скрытия модального окна
+            setTimeout(getSignal, 500); // Запускаем функцию получения сигнала с новым количеством ловушек
+        }
+    });
+
+    let count = 3; // Начальное количество ловушек
+    const countElement = document.getElementById('count');
+    const modal = document.getElementById('modal');
+    const modalInput = document.getElementById('modal-count');
+    const soundEffect = document.getElementById('sound-effect');
+
+    // Функции для показа и скрытия модального окна
+    function showModal() {
+        document.getElementById('ok-sound').play();
+        resetGrid(); // Очистка и пересоздание сетки перед каждым показом
+        modal.style.display = 'flex'; // Убедитесь, что модальное окно видимо
+        modal.classList.add('show');
+    }
+
+
+    function resetGrid() {
+        const grid = document.getElementById('grid');
+        grid.innerHTML = ''; // Очистка текущих квадратов
+        createSquares(); // Создание новых квадратов
+    }
+
+
+    function closeModal() {
+        modal.classList.remove('show');
+        setTimeout(() => {
+            modal.style.display = 'none';
+        }, 500); // Совпадает с длительностью CSS-транзиции для opacity и visibility
+    }
+
+    function closeModals() {
+        document.getElementById('close-sound').play();
+        modal.classList.remove('show');
+        setTimeout(() => {
+            modal.style.display = 'none';
+        }, 500); // Совпадает с длительностью CSS-транзиции для opacity и visibility
+    }
+
+
+    // Функция для создания квадратов в сетке
+    function createSquares() {
+        const grid = document.getElementById('grid');
+        for (let i = 0; i < 25; i++) {
+            const square = document.createElement('div');
+            square.className = 'square';
+            grid.appendChild(square);
+        }
+    }
+
+    // Функция для получения сигнала и отображения изменений в квадратах
+    function getSignal() {
+    const squares = document.querySelectorAll('.square');
+    squares.forEach(square => {
+        square.style.backgroundColor = '#238fa9';
+        square.innerHTML = ''; // Удаление всех дочерних элементов (звезд)
+    });
+
+    let indices = new Set();
+    const cellsToOpen = squaresToOpen(); // Определяем, сколько ячеек открыть
+
+    while (indices.size < cellsToOpen) {
+        indices.add(Math.floor(Math.random() * squares.length));
+    }
+
+    let delay = 0;
+    indices.forEach(index => {
+        setTimeout(() => {
+            const audio = new Audio('static/star.mp3');
+            audio.play();
+            const square = squares[index];
+            square.style.backgroundColor = '#0a101e';
+            const starDiv = document.createElement('div');
+            starDiv.style = "width: 100%; height: 100%; background: url('static/star.svg') center/contain no-repeat;";
+            starDiv.className = 'star';
+            square.appendChild(starDiv);
+            setTimeout(() => {
+                starDiv.classList.add('visible');
+            }, 100); // Задержка перед появлением звезды
+        }, delay);
+        delay += 1000;
+    });
+     countElement.textContent = ""; // Очистка текста с количеством ловушек после завершения действия
+}
+
+
+    // Определение количества ячеек для открытия в зависимости от количества ловушек
+    function squaresToOpen() {
+        switch (count) {
+            case 1:
+                return 10; // Если выбрана 1 ловушка, открываем 10 ячеек
+            case 3:
+                return 5;  // Если выбрано 3 ловушки, открываем 5 ячеек
+            case 5:
+                return 4;  // Если выбрано 5 ловушек, открываем 4 ячейки
+            case 7:
+                return 3;  // Если выбрано 7 ловушек, открываем 3 ячейки
+            default:
+                return 3;  // Значение по умолчанию
+        }
+    }
+
+    // Инициализация при загрузке страницы
+    window.onload = function() {
+        createSquares();
+    }
+    
+     
+</script>
+</body>
+</html>
