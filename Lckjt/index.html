@@ -26,43 +26,9 @@
             flex-direction: column;
             align-items: center;
             width: 100%;
+            transform: scale(0.5);
         }
-        /* Для мобильных устройств (до 767px включительно) */
-        @media (max-width: 767px) {
-            .main-container {
-                transform: scale(1);
-            }
-        }
-        
-        /* Для планшетов (768px - 1023px) */
-        @media (min-width: 768px) and (max-width: 1023px) {
-            .main-container {
-                transform: scale(1); /* Легкое уменьшение */
 
-            }
-        }
-        
-        /* Для стандартных ноутбуков и небольших ПК (1024px - 1366px) */
-        @media (min-width: 1024px) and (max-width: 1366px) {
-            .main-container {
-                transform: scale(0.5); /* Уменьшение под ноутбуки */
-
-            }
-        }
-        
-        /* Для широких экранов (1367px - 1920px) */
-        @media (min-width: 1367px) and (max-width: 1920px) {
-            .main-container {
-                transform: scale(0.5); /* Уменьшение под FullHD экраны */
-            }
-        }
-        
-        /* Для сверхшироких экранов (1921px и выше) */
-        @media (min-width: 1921px) {
-            .main-container {
-                transform: scale(0.5); /* Уменьшение для сверхшироких мониторов */
-            }
-        }
         @keyframes glow {
             0% { box-shadow: 0 7.5px 15px rgba(0,0,0,0.125), 0 0 20px 10px #ffa500; }
             25% { box-shadow: 0 7.5px 15px rgba(0,0,0,0.125), 0 0 20px 10px #ff5050; }
