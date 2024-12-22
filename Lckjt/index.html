@@ -27,7 +27,11 @@
             align-items: center;
             width: 100%;
         }
-
+        @media (max-width: 1920px) {
+            main-container {
+                transform: scale(0.5); 
+            }
+        }
         @keyframes glow {
             0% { box-shadow: 0 7.5px 15px rgba(0,0,0,0.125), 0 0 20px 10px #ffa500; }
             25% { box-shadow: 0 7.5px 15px rgba(0,0,0,0.125), 0 0 20px 10px #ff5050; }
