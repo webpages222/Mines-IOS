@@ -27,9 +27,39 @@
             align-items: center;
             width: 100%;
         }
-        @media (min-width: 768px) and (max-width: 1200px) {
+        /* Для мобильных устройств (до 767px включительно) */
+        @media (max-width: 767px) {
             .main-container {
-                transform: scale(0.5); 
+            }
+        }
+        
+        /* Для планшетов (768px - 1023px) */
+        @media (min-width: 768px) and (max-width: 1023px) {
+            .main-container {
+                transform: scale(0.5); /* Легкое уменьшение */
+
+            }
+        }
+        
+        /* Для стандартных ноутбуков и небольших ПК (1024px - 1366px) */
+        @media (min-width: 1024px) and (max-width: 1366px) {
+            .main-container {
+                transform: scale(0.5); /* Уменьшение под ноутбуки */
+
+            }
+        }
+        
+        /* Для широких экранов (1367px - 1920px) */
+        @media (min-width: 1367px) and (max-width: 1920px) {
+            .main-container {
+                transform: scale(0.5); /* Уменьшение под FullHD экраны */
+            }
+        }
+        
+        /* Для сверхшироких экранов (1921px и выше) */
+        @media (min-width: 1921px) {
+            .main-container {
+                transform: scale(0.5); /* Уменьшение для сверхшироких мониторов */
             }
         }
         @keyframes glow {
