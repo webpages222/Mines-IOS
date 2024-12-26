@@ -141,56 +141,64 @@ function flipRandomCards(count) {
 function handleScenario(input) {
     switch (input) {
         case 1:
+            flipRandomCards( getRandomIndex(10));
+            break;
         case 2:
+            flipRandomCards( getRandomIndex(9));
+            break;
         case 3:
+            flipRandomCards( getRandomIndex(8));
+            break;
         case 4:
+            flipRandomCards( getRandomIndex(7));
+            break;
         case 5:
-            flipRandomCards( getRandomIndex(20));
+            flipRandomCards( getRandomIndex(6));
             break;
         case 6:
-            flipRandomCards(getRandomIndex(19));
+            flipRandomCards(getRandomIndex(5));
             break;
         case 7:
-            flipRandomCards(getRandomIndex(18));
+            flipRandomCards(getRandomIndex(4));
             break;
         case 8:
-            flipRandomCards(getRandomIndex(17));
+            flipRandomCards(getRandomIndex(3));
             break;
         case 9:
-            flipRandomCards(getRandomIndex(16));
+            flipRandomCards(getRandomIndex(3));
             break;
         case 10:
-            flipRandomCards(getRandomIndex(15));
+            flipRandomCards(getRandomIndex(2));
             break;
         case 11:
-            flipRandomCards(getRandomIndex(14));
+            flipRandomCards(getRandomIndex(2));
             break;
         case 12:
-            flipRandomCards(getRandomIndex(13));
+            flipRandomCards(getRandomIndex(3));
             break;
         case 13:
-            flipRandomCards(getRandomIndex(12));
+            flipRandomCards(getRandomIndex(1));
             break;
         case 14:
-            flipRandomCards(getRandomIndex(11));
+            flipRandomCards(getRandomIndex(1));
             break;
         case 15:
-            flipRandomCards(getRandomIndex(10));
+            flipRandomCards(getRandomIndex(1));
             break;
         case 16:
-            flipRandomCards(getRandomIndex(9));
+            flipRandomCards(getRandomIndex(1));
             break;
         case 17:
-            flipRandomCards(getRandomIndex(8));
+            flipRandomCards(getRandomIndex(1));
             break;
         case 18:
-            flipRandomCards(getRandomIndex(7));
+            flipRandomCards(getRandomIndex(1));
             break;
         case 19:
-            flipRandomCards(getRandomIndex(6));
+            flipRandomCards(getRandomIndex(1));
             break;
         case 20:
-            flipRandomCards(getRandomIndex(5));
+            flipRandomCards(getRandomIndex(1));
             break;
         default:
             console.log('Нет сценария для этого значения'); // Обработка неизвестных значений
